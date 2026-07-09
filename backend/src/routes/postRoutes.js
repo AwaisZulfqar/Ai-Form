@@ -1,13 +1,13 @@
 import { Router } from "express";
-import { param } from "express-validator";
-import { listPosts, getPost } from "../controllers/postController.js";
+import { listPosts, getPost, generatePost } from "../controllers/post/index.js";
 import { validate } from "../middleware/validate.js";
+import { generateLimiter } from "../middleware/rateLimiter.js";
+import { postIdParam, topicChain } from "../validators/postValidators.js";
 
 const router = Router();
 
-const postIdParam = param("id").isMongoId().withMessage("Invalid post ID");
-
 router.get("/", listPosts);
+router.post("/generate", generateLimiter, topicChain, validate, generatePost);
 router.get("/:id", postIdParam, validate, getPost);
 
 export default router;
