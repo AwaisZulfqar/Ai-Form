@@ -11,8 +11,18 @@ export default {
         surface: "#FFFFFF",
         border: "#E2E8F0",
         error: "#BA1A1A",
+        success: "#15803D",
         "on-surface": "#191C1E",
         "on-surface-variant": "#45464D",
+      },
+      keyframes: {
+        "toast-in": {
+          "0%": { opacity: "0", clipPath: "inset(0 100% 0 0)", transform: "translateY(-6px)" },
+          "100%": { opacity: "1", clipPath: "inset(0 0 0 0)", transform: "translateY(0)" },
+        },
+      },
+      animation: {
+        "toast-in": "toast-in 320ms ease-out",
       },
       fontFamily: {
         sans: ["Geist", "ui-sans-serif", "system-ui", "sans-serif"],

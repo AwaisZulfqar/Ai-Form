@@ -14,7 +14,7 @@ interface ToastItem {
 
 const ToastContext = createContext<ToastContextValue | undefined>(undefined);
 
-const AUTO_DISMISS_MS = 2000;
+const AUTO_DISMISS_MS = 4000;
 
 export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
@@ -36,13 +36,13 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
-      <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
+      <div className="fixed top-4 right-4 z-50 flex flex-col gap-2">
         {toasts.map((toast) => (
           <div
             key={toast.id}
             role="status"
-            className={`rounded-lg border bg-surface px-4 py-3 shadow-overlay text-body-sm ${
-              toast.type === "error" ? "border-error text-error" : "border-border text-on-surface"
+            className={`animate-toast-in origin-left rounded-lg border bg-surface px-4 py-3 shadow-overlay text-body-sm font-medium ${
+              toast.type === "error" ? "border-error text-error" : "border-success text-success"
             }`}
           >
             {toast.message}
