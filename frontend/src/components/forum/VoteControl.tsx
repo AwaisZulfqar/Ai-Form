@@ -13,7 +13,6 @@ const VoteControl = ({ postId, likeCount, dislikeCount, size = 16 }: VoteControl
     likeCount: up,
     dislikeCount: down,
     userVote,
-    pending,
     vote,
   } = useVote(postId, likeCount, dislikeCount);
 
@@ -22,7 +21,6 @@ const VoteControl = ({ postId, likeCount, dislikeCount, size = 16 }: VoteControl
       <button
         type="button"
         onClick={() => vote(1)}
-        disabled={pending}
         aria-pressed={userVote === 1}
         aria-label="Upvote this post"
         className={`flex items-center gap-1 text-body-sm transition-colors hover:text-primary ${
@@ -36,7 +34,6 @@ const VoteControl = ({ postId, likeCount, dislikeCount, size = 16 }: VoteControl
       <button
         type="button"
         onClick={() => vote(-1)}
-        disabled={pending}
         aria-pressed={userVote === -1}
         aria-label="Downvote this post"
         className={`flex items-center gap-1 text-body-sm transition-colors hover:text-error ${

@@ -15,16 +15,6 @@ const Navbar = () => {
           <span className="text-h3 text-on-surface">AI Forum</span>
         </Link>
 
-        <div className="hidden flex-1 justify-center md:flex">
-          <input
-            type="search"
-            disabled
-            placeholder="Search discussions…"
-            aria-label="Search discussions (coming soon)"
-            className="h-10 w-full max-w-[400px] cursor-not-allowed rounded-lg border border-border bg-background px-3 text-body-sm text-secondary"
-          />
-        </div>
-
         <div className="flex items-center gap-2">
           <Avatar name={currentUser.name} src={currentUser.avatar} />
           {users.length > 0 && (

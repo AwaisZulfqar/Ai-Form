@@ -8,8 +8,12 @@ interface VoteResult {
   userVote: 0 | VoteValue;
 }
 
-export const votePost = (postId: string, value: VoteValue, userId?: string | null) =>
-  apiPatch<VoteResult>(`/posts/${postId}/vote`, { value, userId });
+export const votePost = (
+  postId: string,
+  value: VoteValue,
+  userId?: string | null,
+  signal?: AbortSignal
+) => apiPatch<VoteResult>(`/posts/${postId}/vote`, { value, userId }, { signal });
 
 export const getUserVotes = (userId: string) =>
   apiGet<UserVote[]>(`/votes?userId=${encodeURIComponent(userId)}`);

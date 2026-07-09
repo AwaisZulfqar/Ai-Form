@@ -36,3 +36,12 @@ export interface Comment {
 export interface PostDetail extends Post {
   comments: Comment[];
 }
+
+export interface PaginatedPosts {
+  posts: Post[];
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+  hasMore: boolean;
+}

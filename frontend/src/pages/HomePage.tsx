@@ -6,10 +6,11 @@ import Sidebar from "../components/layout/Sidebar";
 import TopicForm from "../components/forum/TopicForm";
 import PostCard from "../components/forum/PostCard";
 import EmptyState from "../components/common/EmptyState";
+import Button from "../components/common/Button";
 import { SkeletonPost } from "../components/common/Loader";
 
 const HomePage = () => {
-  const { posts, loading, error, prependPost } = usePosts();
+  const { posts, loading, loadingMore, error, hasMore, loadMore, prependPost } = usePosts();
   const { generate, isGenerating } = useGeneratePost();
   const { showToast } = useToast();
 
@@ -52,6 +53,14 @@ const HomePage = () => {
             )}
 
             {!loading && !error && posts.map((post) => <PostCard key={post._id} post={post} />)}
+
+            {!loading && !error && hasMore && (
+              <div className="flex justify-center pt-2">
+                <Button variant="secondary" onClick={loadMore} loading={loadingMore}>
+                  Load more
+                </Button>
+              </div>
+            )}
           </section>
         </main>
 

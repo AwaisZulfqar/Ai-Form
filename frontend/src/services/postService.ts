@@ -1,7 +1,8 @@
 import { apiGet, apiPost, apiPatch } from "./apiClient";
-import type { Post, PostDetail } from "../types";
+import type { Post, PostDetail, PaginatedPosts } from "../types";
 
-export const getPosts = () => apiGet<Post[]>("/posts");
+export const getPosts = (page = 1, limit = 10) =>
+  apiGet<PaginatedPosts>(`/posts?page=${page}&limit=${limit}`);
 
 export const getPost = (id: string) => apiGet<PostDetail>(`/posts/${id}`);
 
