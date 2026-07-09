@@ -1,14 +1,12 @@
 import { Link } from "react-router-dom";
 import Card from "../common/Card";
 import Avatar from "../common/Avatar";
-import { UpvoteIcon, CommentIcon, ShareIcon } from "../common/icons";
+import LikeButton from "./LikeButton";
+import ShareButton from "./ShareButton";
+import { CommentIcon } from "../common/icons";
 import { formatRelativeDate } from "../../utils/formatDate";
 import type { Post } from "../../types";
 
-const ICON_SIZE = 16;
-
-// M3 renders the action row as read-only meta; like/comment/share become
-// interactive in M4.
 const PostCard = ({ post }: { post: Post }) => (
   <Card hoverable as="article">
     <Link to={`/posts/${post._id}`} className="block">
@@ -33,16 +31,17 @@ const PostCard = ({ post }: { post: Post }) => (
         )}
       </div>
 
-      <div className="flex items-center gap-4 text-secondary">
-        <span className="flex items-center gap-1 text-body-sm">
-          <UpvoteIcon size={ICON_SIZE} />
-          {post.likeCount}
-        </span>
-        <span className="flex items-center gap-1 text-body-sm">
-          <CommentIcon size={ICON_SIZE} />
+      <div className="flex items-center gap-4">
+        <LikeButton postId={post._id} likeCount={post.likeCount} />
+        <Link
+          to={`/posts/${post._id}`}
+          className="flex items-center gap-1 text-body-sm text-secondary transition-colors hover:text-primary"
+          aria-label={`${post.commentCount} comments`}
+        >
+          <CommentIcon size={16} />
           {post.commentCount}
-        </span>
-        <ShareIcon size={ICON_SIZE} />
+        </Link>
+        <ShareButton postId={post._id} title={post.title} />
       </div>
     </div>
   </Card>

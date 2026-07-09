@@ -3,7 +3,7 @@ import Comment from "../../models/Comment.js";
 import { ApiError } from "../../utils/ApiError.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
 import { sendSuccess } from "../../utils/response.js";
-import { AUTHOR_FIELDS } from "./constants.js";
+import { AUTHOR_FIELDS } from "../../constants.js";
 
 // GET /api/posts/:id — one post plus its comments, oldest-first (PRD §7.3).
 export const getPost = asyncHandler(async (req, res) => {
