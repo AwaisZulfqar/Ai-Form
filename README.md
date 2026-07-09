@@ -60,6 +60,12 @@ The dev server proxies `/api` → `http://localhost:5000`, so no CORS setup is n
 
 Secrets live only in `.env` (git-ignored); never committed or shipped to the client bundle.
 
+## Deployment
+
+- **Backend** — [Railway](https://railway.com), deployed from `backend/`. Live API: `https://ai-forum-backend-production.up.railway.app/api`
+- **Frontend** — [Vercel](https://vercel.com). Set `VITE_API_BASE_URL` to the backend `/api` URL above, then redeploy (Vite bakes env at build time).
+- **CORS** — set the backend `CORS_ORIGIN` to the deployed frontend origin (no trailing slash, no `/api`).
+
 ## Milestones
 
 | | Milestone | Status |
