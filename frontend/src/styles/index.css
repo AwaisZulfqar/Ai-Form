@@ -1,0 +1,23 @@
+@import url("https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-background text-on-surface font-sans;
+  }
+
+  /* Design system focus ring: 1px primary border + 2px soft glow */
+  :focus-visible {
+    @apply outline-none ring-0;
+    border-color: #0f172a;
+    box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.1);
+  }
+}
