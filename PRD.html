@@ -1,0 +1,921 @@
+<title>AI Forum — Product Requirements Document</title>
+<style>
+  :root{
+    --bg:#f8fafc; --surface:#ffffff; --surface-2:#f1f5f9; --border:#e2e8f0; --border-strong:#cbd5e1;
+    --ink:#0f172a; --ink-2:#475569; --ink-3:#64748b;
+    --primary:#0f172a; --on-primary:#ffffff;
+    --link:#1d4ed8;
+    --success:#15803d; --success-bg:#dcfce7; --success-border:#86efac;
+    --warn:#b45309; --warn-bg:#fef3c7;
+    --danger:#b91c1c; --danger-bg:#fee2e2;
+    --code-bg:#f1f5f9; --code-ink:#0f172a; --chip-bg:#eef2f7;
+    --radius:8px; --radius-lg:14px;
+    --shadow-1:0 1px 2px rgba(15,23,42,.04);
+    --shadow-2:0 4px 16px rgba(15,23,42,.06);
+    --font-sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    --font-mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --maxw:1180px;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#0b1120; --surface:#0f172a; --surface-2:#111c30; --border:#1e293b; --border-strong:#334155;
+      --ink:#e7edf5; --ink-2:#a5b4c8; --ink-3:#7c8ba3;
+      --primary:#e7edf5; --on-primary:#0b1120;
+      --link:#7aa7ff;
+      --success:#4ade80; --success-bg:#0e2e1c; --success-border:#166534;
+      --warn:#fbbf24; --warn-bg:#3a2c07;
+      --danger:#f87171; --danger-bg:#3a1414;
+      --code-bg:#0c1728; --code-ink:#dbe6f5; --chip-bg:#182338;
+      --shadow-1:0 1px 2px rgba(0,0,0,.3); --shadow-2:0 6px 22px rgba(0,0,0,.4);
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#f8fafc; --surface:#ffffff; --surface-2:#f1f5f9; --border:#e2e8f0; --border-strong:#cbd5e1;
+    --ink:#0f172a; --ink-2:#475569; --ink-3:#64748b; --primary:#0f172a; --on-primary:#ffffff; --link:#1d4ed8;
+    --success:#15803d; --success-bg:#dcfce7; --success-border:#86efac;
+    --warn:#b45309; --warn-bg:#fef3c7; --danger:#b91c1c; --danger-bg:#fee2e2;
+    --code-bg:#f1f5f9; --code-ink:#0f172a; --chip-bg:#eef2f7;
+    --shadow-1:0 1px 2px rgba(15,23,42,.04); --shadow-2:0 4px 16px rgba(15,23,42,.06);
+  }
+  :root[data-theme="dark"]{
+    --bg:#0b1120; --surface:#0f172a; --surface-2:#111c30; --border:#1e293b; --border-strong:#334155;
+    --ink:#e7edf5; --ink-2:#a5b4c8; --ink-3:#7c8ba3; --primary:#e7edf5; --on-primary:#0b1120; --link:#7aa7ff;
+    --success:#4ade80; --success-bg:#0e2e1c; --success-border:#166534;
+    --warn:#fbbf24; --warn-bg:#3a2c07; --danger:#f87171; --danger-bg:#3a1414;
+    --code-bg:#0c1728; --code-ink:#dbe6f5; --chip-bg:#182338;
+    --shadow-1:0 1px 2px rgba(0,0,0,.3); --shadow-2:0 6px 22px rgba(0,0,0,.4);
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-sans);font-size:15.5px;line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  a{color:var(--link);text-decoration:none}
+  a:hover{text-decoration:underline}
+  ::selection{background:var(--primary);color:var(--on-primary)}
+
+  /* Header */
+  header.top{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+  .top-inner{max-width:var(--maxw);margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:18px}
+  .brand{display:flex;flex-direction:column;gap:1px;min-width:0}
+  .brand .eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+  .brand .name{font-size:16px;font-weight:700;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .prog-wrap{flex:1;min-width:80px;display:flex;flex-direction:column;gap:5px}
+  .prog-meta{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink-3);font-weight:600;letter-spacing:.02em}
+  .prog-meta b{color:var(--ink);font-variant-numeric:tabular-nums}
+  .prog-track{height:7px;background:var(--surface-2);border:1px solid var(--border);border-radius:999px;overflow:hidden}
+  .prog-fill{height:100%;width:0;background:linear-gradient(90deg,var(--success),color-mix(in srgb,var(--success) 70%,var(--primary)));border-radius:999px;transition:width .35s ease}
+  .top-actions{display:flex;gap:8px}
+  button.btn{font:inherit;font-size:13px;font-weight:600;cursor:pointer;border-radius:var(--radius);border:1px solid var(--border-strong);background:var(--surface);color:var(--ink);padding:7px 12px;display:inline-flex;align-items:center;gap:6px}
+  button.btn:hover{background:var(--surface-2)}
+  button.btn:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+
+  /* Shell */
+  .shell{max-width:var(--maxw);margin:0 auto;padding:34px 24px 96px;display:grid;grid-template-columns:236px minmax(0,1fr);gap:44px;align-items:start}
+  nav.toc{position:sticky;top:86px;display:flex;flex-direction:column;gap:2px;font-size:13.5px;max-height:calc(100vh - 110px);overflow:auto}
+  nav.toc .toc-title{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);font-weight:700;margin:0 0 8px 10px}
+  nav.toc a{color:var(--ink-2);padding:5px 10px;border-radius:6px;border-left:2px solid transparent;line-height:1.35}
+  nav.toc a:hover{background:var(--surface-2);text-decoration:none;color:var(--ink)}
+  nav.toc a.active{color:var(--ink);background:var(--surface-2);border-left-color:var(--primary);font-weight:600}
+  main{min-width:0}
+
+  /* Hero */
+  .hero{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:30px 32px;margin-bottom:34px;box-shadow:var(--shadow-1)}
+  .hero .eyebrow{font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);font-weight:700}
+  .hero h1{font-size:33px;line-height:1.1;letter-spacing:-.025em;font-weight:800;margin:.35em 0 .35em;text-wrap:balance}
+  .hero p.lede{font-size:16.5px;color:var(--ink-2);margin:0;max-width:64ch}
+  .meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-top:24px}
+  .meta-grid .cell{background:var(--surface);padding:12px 14px}
+  .meta-grid .k{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+  .meta-grid .v{font-size:14px;font-weight:600;margin-top:3px}
+
+  /* Sections */
+  section{margin-bottom:14px;scroll-margin-top:96px}
+  h2.sec{font-size:13px;letter-spacing:.02em;font-weight:700;margin:44px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:baseline;gap:12px}
+  h2.sec .num{font-family:var(--font-mono);font-size:12px;color:var(--on-primary);background:var(--primary);border-radius:5px;padding:3px 7px;font-weight:600;flex:none}
+  h2.sec .t{font-size:21px;letter-spacing:-.015em}
+  h3.sub{font-size:16px;font-weight:680;letter-spacing:-.01em;margin:26px 0 10px}
+  h4.sub2{font-size:13.5px;font-weight:680;color:var(--ink-2);margin:18px 0 8px;letter-spacing:.01em}
+  p{margin:0 0 12px;max-width:74ch}
+  ul,ol{margin:0 0 14px;padding-left:22px;max-width:74ch}
+  li{margin:5px 0}
+  li::marker{color:var(--ink-3)}
+  strong{font-weight:680}
+  code{font-family:var(--font-mono);font-size:.86em;background:var(--code-bg);color:var(--code-ink);padding:1.5px 5px;border-radius:5px;border:1px solid var(--border)}
+  pre{background:var(--code-bg);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;overflow-x:auto;margin:0 0 16px;box-shadow:var(--shadow-1)}
+  pre code{background:none;border:none;padding:0;font-size:12.6px;line-height:1.55;color:var(--code-ink)}
+
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;margin:0 0 16px;box-shadow:var(--shadow-1)}
+  .callout{border-left:3px solid var(--primary);background:var(--surface-2);border-radius:0 var(--radius) var(--radius) 0;padding:12px 16px;margin:0 0 16px;font-size:14.5px;color:var(--ink-2)}
+  .callout.warn{border-left-color:var(--warn);background:var(--warn-bg)}
+  .callout strong{color:var(--ink)}
+
+  /* Tables */
+  .twrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius);margin:0 0 16px;box-shadow:var(--shadow-1)}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:520px}
+  th,td{text-align:left;padding:9px 13px;border-bottom:1px solid var(--border);vertical-align:top}
+  thead th{background:var(--surface-2);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:700;white-space:nowrap}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:var(--surface-2)}
+  td code,th code{white-space:nowrap}
+  .mono{font-family:var(--font-mono);font-size:12.5px}
+
+  .chip{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--chip-bg);color:var(--ink-2);border:1px solid var(--border);letter-spacing:.02em}
+  .chip.get{color:#0369a1;background:#e0f2fe;border-color:#bae6fd}
+  .chip.post{color:#166534;background:#dcfce7;border-color:#bbf7d0}
+  .chip.patch{color:#a16207;background:#fef9c3;border-color:#fde68a}
+  @media (prefers-color-scheme:dark){.chip.get{color:#7dd3fc;background:#082f49;border-color:#0c4a6e}.chip.post{color:#86efac;background:#052e16;border-color:#166534}.chip.patch{color:#fcd34d;background:#3a2c07;border-color:#854d0e}}
+  :root[data-theme="dark"] .chip.get{color:#7dd3fc;background:#082f49;border-color:#0c4a6e}
+  :root[data-theme="dark"] .chip.post{color:#86efac;background:#052e16;border-color:#166534}
+  :root[data-theme="dark"] .chip.patch{color:#fcd34d;background:#3a2c07;border-color:#854d0e}
+
+  /* Checklist */
+  .grouphead{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 12px}
+  .grouphead .gh-title{font-size:15px;font-weight:700}
+  .grouphead .gh-sub{font-size:13px;color:var(--ink-3)}
+  .group-meter{flex:1;min-width:90px;height:6px;background:var(--surface-2);border:1px solid var(--border);border-radius:999px;overflow:hidden}
+  .group-meter-fill{height:100%;width:0;background:var(--success);border-radius:999px;transition:width .3s ease}
+  .group-count{font-size:12px;font-weight:700;color:var(--ink-2);font-variant-numeric:tabular-nums;flex:none}
+  .milestone{margin-bottom:8px}
+  .checklist{list-style:none;padding:0;margin:0 0 8px;max-width:none}
+  .checklist li{margin:0;padding:0;border-bottom:1px solid var(--border)}
+  .checklist li:last-child{border-bottom:none}
+  label.check{display:flex;gap:11px;align-items:flex-start;padding:9px 4px;cursor:pointer;line-height:1.5;font-size:14px}
+  label.check:hover{background:var(--surface-2)}
+  label.check input{appearance:none;-webkit-appearance:none;flex:none;width:19px;height:19px;margin-top:1px;border:1.5px solid var(--border-strong);border-radius:5px;background:var(--surface);cursor:pointer;position:relative;transition:background .15s,border-color .15s}
+  label.check input:hover{border-color:var(--ink-3)}
+  label.check input:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+  label.check input:checked{background:var(--success);border-color:var(--success)}
+  label.check input:checked::after{content:"";position:absolute;left:5.5px;top:2px;width:4px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+  label.check input:checked + .ck-text{color:var(--ink-3);text-decoration:line-through;text-decoration-color:var(--border-strong)}
+  .ck-text{transition:color .15s}
+  .ck-text b{font-weight:680;color:var(--ink)}
+  label.check input:checked + .ck-text b{color:var(--ink-3)}
+  .group-complete .gh-title::after{content:"✓ done";margin-left:8px;font-size:11px;color:var(--success);background:var(--success-bg);border:1px solid var(--success-border);padding:1px 7px;border-radius:999px;font-weight:700;letter-spacing:.02em}
+  .ac-group{margin-bottom:22px}
+
+  footer{max-width:var(--maxw);margin:0 auto;padding:26px 24px 60px;color:var(--ink-3);font-size:13px;border-top:1px solid var(--border)}
+
+  @media (max-width:1000px){
+    .shell{grid-template-columns:1fr;gap:0}
+    nav.toc{display:none}
+  }
+  @media (max-width:640px){
+    .top-inner{flex-wrap:wrap;gap:12px}
+    .prog-wrap{order:3;flex-basis:100%}
+    .hero{padding:22px 20px}
+    .hero h1{font-size:26px}
+    .shell{padding:24px 16px 80px}
+  }
+</style>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <span class="eyebrow">Product Requirements</span>
+      <span class="name">AI Forum</span>
+    </div>
+    <div class="prog-wrap" title="Overall build progress — checkboxes persist in your browser">
+      <div class="prog-meta"><span>Build progress</span><span><b id="pcount">0 / 0</b> · <b id="ppct">0%</b></span></div>
+      <div class="prog-track"><div class="prog-fill" id="pfill"></div></div>
+    </div>
+    <div class="top-actions">
+      <button class="btn" id="themeBtn" type="button" aria-label="Toggle theme">◐ Theme</button>
+      <button class="btn" id="resetBtn" type="button">Reset</button>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+  <nav class="toc" id="toc" aria-label="Table of contents">
+    <p class="toc-title">Contents</p>
+    <a href="#s1">1 · Overview</a>
+    <a href="#s2">2 · Goals</a>
+    <a href="#s3">3 · User Stories</a>
+    <a href="#s4">4 · Functional Reqs</a>
+    <a href="#s5">5 · Non-Functional</a>
+    <a href="#s6">6 · Database Schema</a>
+    <a href="#s7">7 · API Spec</a>
+    <a href="#s8">8 · Frontend Arch</a>
+    <a href="#s9">9 · Backend Arch</a>
+    <a href="#s10">10 · Folder Structure</a>
+    <a href="#s11">11 · UI Components</a>
+    <a href="#s12">12 · Validation</a>
+    <a href="#s13">13 · Error Handling</a>
+    <a href="#s14">14 · Milestones ✓</a>
+    <a href="#s15">15 · Acceptance ✓</a>
+    <a href="#s16">16 · Future</a>
+    <a href="#sa">Appendices</a>
+  </nav>
+
+  <main>
+    <div class="hero">
+      <span class="eyebrow">Developer-Ready Specification · v1.1</span>
+      <h1>AI Forum — Post Generation, Likes, Comments &amp; Sharing</h1>
+      <p class="lede">A lightweight web app that turns a plain-text <strong>topic</strong> into a fully-formed forum discussion post via OpenAI, then lets users like, comment on, and share it. No auth — a single seeded default user acts for all writes. Scoped for a 4–8 hour build.</p>
+      <div class="meta-grid">
+        <div class="cell"><div class="k">Frontend</div><div class="v">React (Vite) · Tailwind</div></div>
+        <div class="cell"><div class="k">Backend</div><div class="v">Node · Express</div></div>
+        <div class="cell"><div class="k">Database</div><div class="v">MongoDB · Mongoose</div></div>
+        <div class="cell"><div class="k">AI Provider</div><div class="v">OpenAI · gpt-4o-mini</div></div>
+        <div class="cell"><div class="k">Design system</div><div class="v">Executive Intelligence</div></div>
+        <div class="cell"><div class="k">Build budget</div><div class="v">4–8 hours</div></div>
+      </div>
+    </div>
+
+    <!-- 1 -->
+    <section id="s1">
+      <h2 class="sec"><span class="num">01</span><span class="t">Project Overview</span></h2>
+      <p>AI Forum turns a <strong>topic</strong> into a forum <strong>discussion post</strong> using OpenAI (<code>gpt-4o-mini</code>). Generated posts persist and render in a newest-first feed where users can <strong>like</strong>, <strong>comment</strong>, and <strong>share</strong>. Every post has a dedicated shareable detail page at <code>/posts/:id</code>.</p>
+      <p>The product deliberately omits authentication, profiles, and moderation. A single <strong>seeded Default User</strong> is the author/actor for all writes. Emphasis: a clean end-to-end vertical slice — input → AI generation → persistence → feed → interaction.</p>
+      <p>Visuals follow the <strong>"Executive Intelligence Interface"</strong> system in <code>stitch_clean_forum_post_generator/</code> (§8.2): minimal, corporate, content-first — light-gray canvas, white bordered cards, an 8px grid, near-black/slate-navy primary actions.</p>
+      <h3 class="sub">1.2 Out of scope (do not build)</h3>
+      <p>Authentication/login, profiles, admin panel, notifications, real-time/WebSockets, pagination/infinite scroll, moderation, nested reply threading beyond one visual level, and any multi-user identity system.</p>
+    </section>
+
+    <!-- 2 -->
+    <section id="s2">
+      <h2 class="sec"><span class="num">02</span><span class="t">Goals</span></h2>
+      <h4 class="sub2">Product goals</h4>
+      <ul>
+        <li><strong>G1</strong> — Generate a realistic discussion-starter post from a plain-text topic in one click.</li>
+        <li><strong>G2</strong> — Generated posts persist and appear at the top of a newest-first feed.</li>
+        <li><strong>G3</strong> — A user can like, comment on, and share any post.</li>
+        <li><strong>G4</strong> — Every post is individually addressable via a unique URL (<code>/posts/:id</code>).</li>
+        <li><strong>G5</strong> — Responsive UI with clear loading/error feedback, matching the design system.</li>
+      </ul>
+      <h4 class="sub2">Engineering goals</h4>
+      <ul>
+        <li><strong>EG1</strong> — Clean separation of concerns (routes → controllers → services → models).</li>
+        <li><strong>EG2</strong> — Reusable, composable React components.</li>
+        <li><strong>EG3</strong> — All input validated server-side; secrets never in the client.</li>
+        <li><strong>EG4</strong> — Graceful degradation on AI / DB / network failure with friendly messages.</li>
+      </ul>
+    </section>
+
+    <!-- 3 -->
+    <section id="s3">
+      <h2 class="sec"><span class="num">03</span><span class="t">User Stories</span></h2>
+      <p>All stories use the single seeded <strong>Default User</strong> as the actor.</p>
+      <div class="twrap"><table>
+        <thead><tr><th>ID</th><th>I want to…</th><th>So that…</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td>US-1</td><td>enter a topic and click Generate</td><td>I get an AI-written forum post</td><td>Must</td></tr>
+          <tr><td>US-2</td><td>see a loader while the AI works</td><td>I know it's in progress</td><td>Must</td></tr>
+          <tr><td>US-3</td><td>see the new post at the top of the feed</td><td>I can read what was created</td><td>Must</td></tr>
+          <tr><td>US-4</td><td>browse all posts newest-first</td><td>I can catch up</td><td>Must</td></tr>
+          <tr><td>US-5</td><td>like a post</td><td>I can signal agreement</td><td>Must</td></tr>
+          <tr><td>US-6</td><td>comment on a post</td><td>I can join the discussion</td><td>Must</td></tr>
+          <tr><td>US-7</td><td>view all comments</td><td>I can read the conversation</td><td>Must</td></tr>
+          <tr><td>US-8</td><td>share a post via a unique link</td><td>others open that exact post</td><td>Must</td></tr>
+          <tr><td>US-9</td><td>open a post's detail page</td><td>I see full content + comments</td><td>Must</td></tr>
+          <tr><td>US-10</td><td>see a friendly error + retry</td><td>I recover from failures</td><td>Must</td></tr>
+          <tr><td>US-11</td><td>see an empty-state message</td><td>I understand there's nothing yet</td><td>Should</td></tr>
+          <tr><td>US-12</td><td>be blocked from liking twice in a session</td><td>likes aren't trivially inflated</td><td>Could</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- 4 -->
+    <section id="s4">
+      <h2 class="sec"><span class="num">04</span><span class="t">Functional Requirements</span></h2>
+      <h3 class="sub">4.1 AI Post Generation</h3>
+      <ul>
+        <li><strong>FR-1.1</strong> — Home exposes a topic input + Generate button ("Start a Discussion" card).</li>
+        <li><strong>FR-1.2</strong> — Generate sends <code>POST /api/posts/generate</code> with <code>{ topic }</code>.</li>
+        <li><strong>FR-1.3</strong> — Backend validates the topic (§12.1) before any AI call.</li>
+        <li><strong>FR-1.4</strong> — Backend calls OpenAI with a prompt that returns a title + forum-style body (§9.3).</li>
+        <li><strong>FR-1.5</strong> — Parse to <code>{ title, content }</code>, validate non-empty (§12.2–12.3), persist a <code>Post</code> by the Default User.</li>
+        <li><strong>FR-1.6</strong> — Return the created post (<code>201</code>).</li>
+        <li><strong>FR-1.7</strong> — Frontend prepends the new post without a full reload.</li>
+        <li><strong>FR-1.8</strong> — During generation, disable the button and show a "Generating post…" skeleton atop the feed.</li>
+        <li><strong>FR-1.9</strong> — Output must read like a discussion starter (opinionated, question-raising), not an encyclopedia paragraph — enforced by the prompt.</li>
+      </ul>
+      <h3 class="sub">4.2 Forum Feed</h3>
+      <ul>
+        <li><strong>FR-2.1</strong> — Home renders all posts sorted by <code>createdAt</code> descending.</li>
+        <li><strong>FR-2.2</strong> — Each <code>PostCard</code>: title, 3-line preview, author + avatar, relative date, like count, comment count, share action.</li>
+        <li><strong>FR-2.3</strong> — Clicking the title navigates to <code>/posts/:id</code>.</li>
+        <li><strong>FR-2.4</strong> — No posts → render an <code>EmptyState</code>.</li>
+      </ul>
+      <h3 class="sub">4.3 Likes</h3>
+      <ul>
+        <li><strong>FR-3.1</strong> — Each post shows a like/upvote control with the current count.</li>
+        <li><strong>FR-3.2</strong> — Click sends <code>PATCH /api/posts/:id/like</code>; backend increments <code>likeCount</code> atomically, returns the updated value.</li>
+        <li><strong>FR-3.3</strong> — UI updates optimistically, reconciles with the response.</li>
+        <li><strong>FR-3.4</strong> <em>(optional)</em> — Session guard (state / <code>localStorage</code> Set) blocks a second like in the same session.</li>
+      </ul>
+      <h3 class="sub">4.4 Comments</h3>
+      <ul>
+        <li><strong>FR-4.1</strong> — Detail page (+ inline card preview) shows all comments, oldest-first.</li>
+        <li><strong>FR-4.2</strong> — <code>CommentForm</code> submits <code>{ text }</code>; author defaults to Default User.</li>
+        <li><strong>FR-4.3</strong> — Submit sends <code>POST /api/posts/:id/comments</code>; on <code>201</code> append + bump count.</li>
+        <li><strong>FR-4.4</strong> — Each comment: author + avatar, text, relative date.</li>
+        <li><strong>FR-4.5</strong> — No comments → <code>EmptyState</code> inside the section.</li>
+      </ul>
+      <h3 class="sub">4.5 Sharing</h3>
+      <ul>
+        <li><strong>FR-5.1</strong> — Each post has a share control.</li>
+        <li><strong>FR-5.2</strong> — If <code>navigator.share</code> exists → native sheet with the post URL; else copy <code>https://&lt;host&gt;/posts/:id</code> via <code>navigator.clipboard.writeText</code>.</li>
+        <li><strong>FR-5.3</strong> — Show a toast: "Link copied to clipboard."</li>
+        <li><strong>FR-5.4</strong> — No backend write. <code>PATCH /share</code> is out of scope unless share-count tracking is added.</li>
+      </ul>
+      <h3 class="sub">4.6 Post Detail Page</h3>
+      <ul>
+        <li><strong>FR-6.1</strong> — <code>/posts/:id</code> fetches post + comments via <code>GET /api/posts/:id</code>.</li>
+        <li><strong>FR-6.2</strong> — Renders full title, content, author, date, like + share buttons, comment list + form.</li>
+        <li><strong>FR-6.3</strong> — Invalid/not-found ID → not-found state (not a crash).</li>
+      </ul>
+    </section>
+
+    <!-- 5 -->
+    <section id="s5">
+      <h2 class="sec"><span class="num">05</span><span class="t">Non-Functional Requirements</span></h2>
+      <ul>
+        <li><strong>NFR-1 Clean code</strong> — Separation of concerns; consistent naming; no duplicated logic; UI, business logic, data access isolated.</li>
+        <li><strong>NFR-1a Minimal comments</strong> — Write self-documenting code; keep comments sparse. Comment only non-obvious intent (a tricky regex, a business rule, a workaround). No line-by-line narration, no commented-out code, no JSDoc boilerplate on trivial functions. Clear names &gt; comments.</li>
+        <li><strong>NFR-2 Responsive UI</strong> — Mobile-first. 12-col desktop (max 1200px), reduced tablet margins, single-column mobile stack (sidebar hidden/collapsed).</li>
+        <li><strong>NFR-3 Loading states</strong> — Loader during generation + fetches; buttons disabled in-flight.</li>
+        <li><strong>NFR-4 Error messages</strong> — Friendly, no stack traces leaked; retry guidance where relevant.</li>
+        <li><strong>NFR-5 Reusable components</strong> — Shared Button, Card, Loader, Input, Avatar, Toast.</li>
+        <li><strong>NFR-6 Environment variables</strong> — API key, Mongo URI, port, frontend API base URL via env (§9.5).</li>
+        <li><strong>NFR-7 Security basics</strong> — Server-side validation on all inputs; sanitize user text; CORS restricted to the frontend origin; body-size limit; no secrets in the client bundle.</li>
+        <li><strong>NFR-8 Rate limiting</strong> <em>(optional/recommended)</em> — Throttle <code>POST /api/posts/generate</code> to protect the AI quota.</li>
+        <li><strong>NFR-9 Accessibility</strong> — Semantic HTML; focus states (1px primary border + 2px soft glow); keyboard-usable buttons; avatar alt text.</li>
+        <li><strong>NFR-10 Performance</strong> — Feed returns comment counts via denormalized <code>commentCount</code> (§6).</li>
+      </ul>
+    </section>
+
+    <!-- 6 -->
+    <section id="s6">
+      <h2 class="sec"><span class="num">06</span><span class="t">Database Schema</span></h2>
+      <p>MongoDB via Mongoose. Three collections. A <strong>seed script</strong> creates the Default User on first run.</p>
+      <h3 class="sub">6.1 User</h3>
+<pre><code>{
+  _id: ObjectId,
+  name:   { type: String, required: true, trim: true, maxlength: 60 },
+  email:  { type: String, required: true, lowercase: true, trim: true },
+  avatar: { type: String, default: null },
+  createdAt: Date, updatedAt: Date    // timestamps: true
+}</code></pre>
+      <p>Seeded: <code>{ name: "Default User", email: "default@aiforum.local", avatar: null }</code>. All writes reference this <code>_id</code>.</p>
+      <h3 class="sub">6.2 Post</h3>
+<pre><code>{
+  _id: ObjectId,
+  title:   { type: String, required: true, trim: true, maxlength: 120 },
+  content: { type: String, required: true, trim: true, minlength: 50, maxlength: 2000 },
+  author:  { type: ObjectId, ref: "User", required: true },
+  topic:   { type: String, trim: true, maxlength: 100 },
+  likeCount:    { type: Number, default: 0, min: 0 },
+  commentCount: { type: Number, default: 0, min: 0 },   // denormalized for feed
+  createdAt: Date, updatedAt: Date
+}</code></pre>
+      <p><strong>Shareable id</strong> = the Mongo <code>_id</code>. Share URL is built client-side as <code>${FRONTEND_BASE_URL}/posts/${_id}</code> — no stored <code>shareUrl</code>. Index <code>{ createdAt: -1 }</code> for the feed.</p>
+      <h3 class="sub">6.3 Comment</h3>
+<pre><code>{
+  _id: ObjectId,
+  postId: { type: ObjectId, ref: "Post", required: true, index: true },
+  author: { type: ObjectId, ref: "User", required: true },
+  text:   { type: String, required: true, trim: true, minlength: 1, maxlength: 500 },
+  createdAt: Date, updatedAt: Date
+}</code></pre>
+      <p>On create, <code>$inc</code> the parent post's <code>commentCount</code> in the same flow. Feed/detail read it directly — no aggregation.</p>
+      <div class="callout"><strong>Relationships:</strong> User (1) ──&lt; (N) Post ──&lt; (N) Comment. User is also the author on comments.</div>
+    </section>
+
+    <!-- 7 -->
+    <section id="s7">
+      <h2 class="sec"><span class="num">07</span><span class="t">API Specification</span></h2>
+      <p>Base URL <code>/api</code>. Consistent envelope:</p>
+<pre><code>// success →  { "success": true,  "data": &lt;object|array&gt; }
+// error   →  { "success": false, "message": "...", "errors": [ /* optional */ ] }</code></pre>
+      <div class="twrap"><table>
+        <thead><tr><th>Method</th><th>Path</th><th>Purpose</th><th>OK</th></tr></thead>
+        <tbody>
+          <tr><td><span class="chip get">GET</span></td><td class="mono">/api/posts</td><td>List posts, newest-first</td><td>200</td></tr>
+          <tr><td><span class="chip get">GET</span></td><td class="mono">/api/posts/:id</td><td>One post + its comments</td><td>200</td></tr>
+          <tr><td><span class="chip post">POST</span></td><td class="mono">/api/posts/generate</td><td>Generate + save from a topic</td><td>201</td></tr>
+          <tr><td><span class="chip patch">PATCH</span></td><td class="mono">/api/posts/:id/like</td><td>Increment like count</td><td>200</td></tr>
+          <tr><td><span class="chip get">GET</span></td><td class="mono">/api/posts/:id/comments</td><td>List comments for a post</td><td>200</td></tr>
+          <tr><td><span class="chip post">POST</span></td><td class="mono">/api/posts/:id/comments</td><td>Create a comment</td><td>201</td></tr>
+          <tr><td><span class="chip get">GET</span></td><td class="mono">/api/health</td><td>Liveness check</td><td>200</td></tr>
+        </tbody>
+      </table></div>
+      <div class="callout"><code>PATCH /api/posts/:id/share</code> is intentionally omitted — sharing is client-only. Add only if share-count tracking becomes a requirement.</div>
+
+      <h4 class="sub2">POST /api/posts/generate → 201</h4>
+      <p>Body <code>{ "topic": "Artificial Intelligence" }</code>. Flow: validate topic → call OpenAI → parse <code>{title, content}</code> → validate → save Post (author = Default User) → return.</p>
+<pre><code>{
+  "success": true,
+  "data": {
+    "_id": "64f3a123abc456def7890123",
+    "title": "Why Artificial Intelligence Is Reshaping Everyday Work",
+    "content": "Artificial intelligence is no longer a futuristic concept...",
+    "author": { "_id": "64f3a111abc456def7890001", "name": "Default User" },
+    "likeCount": 0, "commentCount": 0,
+    "createdAt": "2025-01-01T10:00:00.000Z",
+    "updatedAt": "2025-01-01T10:00:00.000Z"
+  }
+}</code></pre>
+      <p><strong>Errors:</strong> <code>400</code> topic validation · <code>502</code> AI provider failure/timeout · <code>500</code> unexpected · <code>429</code> rate limit (if enabled).</p>
+
+      <h4 class="sub2">GET /api/posts/:id → 200 (post + comments)</h4>
+<pre><code>{
+  "success": true,
+  "data": {
+    "_id": "64f3a123abc456def7890123",
+    "title": "...", "content": "...",
+    "author": { "_id": "...0001", "name": "Default User", "avatar": null },
+    "likeCount": 4, "commentCount": 2,
+    "createdAt": "...", "updatedAt": "...",
+    "comments": [
+      { "_id": "...0999",
+        "author": { "_id": "...0001", "name": "Default User" },
+        "text": "Great post, I agree with this point.",
+        "createdAt": "2025-01-01T10:05:00.000Z" }
+    ]
+  }
+}</code></pre>
+      <p><strong>Errors:</strong> <code>400</code> invalid ObjectId · <code>404</code> not found.</p>
+
+      <h4 class="sub2">PATCH /api/posts/:id/like → 200</h4>
+<pre><code>{ "success": true, "data": { "_id": "64f3a123abc456def7890123", "likeCount": 5 } }</code></pre>
+
+      <h4 class="sub2">POST /api/posts/:id/comments → 201</h4>
+      <p>Body <code>{ "text": "..." }</code>. <code>author</code> is server-attached (Default User); any client-sent author is ignored.</p>
+<pre><code>{
+  "success": true,
+  "data": {
+    "_id": "64f3a999abc456def7890999",
+    "postId": "64f3a123abc456def7890123",
+    "author": { "_id": "64f3a111abc456def7890001", "name": "Default User" },
+    "text": "Great post, I agree with this point.",
+    "createdAt": "2025-01-01T10:05:00.000Z"
+  }
+}</code></pre>
+
+      <h4 class="sub2">Status codes</h4>
+      <div class="twrap"><table>
+        <thead><tr><th>Code</th><th>When</th></tr></thead>
+        <tbody>
+          <tr><td>200</td><td>Successful fetch or update</td></tr>
+          <tr><td>201</td><td>Post or comment created</td></tr>
+          <tr><td>400</td><td>Validation failure / malformed ObjectId</td></tr>
+          <tr><td>404</td><td>Post or comment not found</td></tr>
+          <tr><td>429</td><td>Rate limit exceeded (if enabled)</td></tr>
+          <tr><td>500</td><td>Unexpected server / DB failure</td></tr>
+          <tr><td>502</td><td>AI provider upstream failure</td></tr>
+        </tbody>
+      </table></div>
+
+      <h4 class="sub2">Validation error shape</h4>
+<pre><code>{
+  "success": false,
+  "message": "Validation failed",
+  "errors": [ { "field": "topic", "message": "Topic cannot be empty" } ]
+}</code></pre>
+    </section>
+
+    <!-- 8 -->
+    <section id="s8">
+      <h2 class="sec"><span class="num">08</span><span class="t">Frontend Architecture</span></h2>
+      <p>React 18 + Vite SPA. React Router, two routes. Tailwind configured with §8.2 tokens. Data access isolated in <code>services/</code> (axios); UI/data state in custom <code>hooks/</code>; ephemeral global state (toast, default user) in <code>context/</code>. No Redux — <code>useState</code> + <code>useContext</code> + custom hooks suffice.</p>
+      <div class="twrap"><table>
+        <thead><tr><th>Path</th><th>Page</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">/</td><td>HomePage</td><td>Topic form + feed (+ sidebar)</td></tr>
+          <tr><td class="mono">/posts/:id</td><td>PostDetailPage</td><td>Full post + comments + actions</td></tr>
+          <tr><td class="mono">*</td><td>NotFoundPage</td><td>Fallback</td></tr>
+        </tbody>
+      </table></div>
+      <p><strong>State:</strong> feed list, generation status, toast in React state/context. On generate success, prepend to the in-memory feed (no refetch). Optimistic like + comment, reconciled with responses.</p>
+
+      <h3 class="sub">8.2 Design System — "Executive Intelligence Interface"</h3>
+      <p>Source: <code>stitch_clean_forum_post_generator/</code>. Encode into <code>tailwind.config.js</code> (<code>theme.extend</code>). Minimal, corporate, high-density, content-first. Depth via tonal layers + 1px outlines, not heavy shadows.</p>
+      <h4 class="sub2">Color tokens</h4>
+      <div class="twrap"><table>
+        <thead><tr><th>Token</th><th>Value</th><th>Use</th></tr></thead>
+        <tbody>
+          <tr><td>primary</td><td class="mono">#0F172A</td><td>Primary buttons, headings, high-emphasis text</td></tr>
+          <tr><td>on-primary</td><td class="mono">#FFFFFF</td><td>Text on primary</td></tr>
+          <tr><td>secondary</td><td class="mono">#64748B</td><td>Metadata, icons, secondary text</td></tr>
+          <tr><td>background</td><td class="mono">#F8FAFC</td><td>App canvas</td></tr>
+          <tr><td>surface (card)</td><td class="mono">#FFFFFF</td><td>Cards / posts</td></tr>
+          <tr><td>border</td><td class="mono">#E2E8F0</td><td>1px card + input borders, thread lines</td></tr>
+          <tr><td>error</td><td class="mono">#BA1A1A</td><td>Validation / error states</td></tr>
+          <tr><td>on-surface</td><td class="mono">#191C1E</td><td>Body text</td></tr>
+        </tbody>
+      </table></div>
+      <h4 class="sub2">Typography — Geist</h4>
+      <p>Self-host or Google Fonts. Scale: H1 36/44 700 (mobile 28/34) · H2 24/32 600 · H3 20/28 600 (post titles) · body-lg 18/28 · body-md 16/24 · body-sm 14/20 (comments, previews) · label-md 14/20 600 (actions) · caption 12/16 500 (timestamps, chips). Tight heading tracking (−0.01 to −0.02em); body line-height ~1.5.</p>
+      <h4 class="sub2">Spacing, radius, elevation</h4>
+      <ul>
+        <li>Strict <strong>8px grid</strong>. Card padding 16px; vertical gap between posts 24px; icon↔label 4px. 12-col grid, max 1200px, gutter 24px. Mobile single column, 16px margins.</li>
+        <li>Radius: components/buttons/inputs/cards 8px; large containers 16px; chips fully rounded (pill); checkboxes 4px.</li>
+        <li>Elevation — L0 bg <code>#F8FAFC</code>; L1 cards white + 1px border, <strong>no shadow</strong>; L2 hover <code>0 4px 12px rgba(15,23,42,.05)</code>; L3 modal/toast <code>0 10px 25px rgba(15,23,42,.10)</code>.</li>
+      </ul>
+      <h4 class="sub2">Component specs (from design)</h4>
+      <ul>
+        <li><strong>Navbar</strong> — 64px, white, 1px bottom border. Logo left; centered search (decorative/Future); code toggle + avatar right.</li>
+        <li><strong>Post card</strong> — white, 1px border, 8px radius. H3 title, 3-line body-sm preview (clamp), footer: avatar + author + · + time + category chip, right actions: upvote (arrow + count), comment (icon + count), share. Hover → L2.</li>
+        <li><strong>Inline comment</strong> — 24px left indent per level (max one level); 2px vertical thread line <code>#E2E8F0</code>; body-sm; <code>AUTHOR</code> badge when commenter is the post author.</li>
+        <li><strong>Form input</strong> — 1px border, 8px radius, body-md; focus = 1px primary border + 2px soft primary glow (10% opacity); label above.</li>
+        <li><strong>Buttons</strong> — Primary: primary bg, white text (black "✦ Generate"). Secondary: white, 1px border, primary text. Heights 40px / 32px.</li>
+        <li><strong>Sidebar (design extra)</strong> — "Trending Topics" + "Forum Rules" cards, <strong>static/hardcoded</strong>, not API-backed. Optional; hide on mobile.</li>
+      </ul>
+      <div class="callout warn"><strong>Like vs. Upvote:</strong> the design renders the like action as an <strong>upvote arrow + count</strong>. Keep the API terms (<code>likeCount</code>, <code>/like</code>) but style the control as the upvote.</div>
+    </section>
+
+    <!-- 9 -->
+    <section id="s9">
+      <h2 class="sec"><span class="num">09</span><span class="t">Backend Architecture</span></h2>
+      <p>Layered: <strong>routes → validation middleware → controllers → services → models</strong>. Controllers are thin; services hold business/AI logic; models are Mongoose schemas. Centralized error middleware maps thrown errors to the envelope.</p>
+      <h4 class="sub2">Request lifecycle</h4>
+<pre><code>Client → CORS → body parser (size-limited) → rate limiter (generate only)
+       → router → validation → controller → service → model → MongoDB
+       → controller shapes response → (error?) → errorHandler → JSON envelope → Client</code></pre>
+      <h3 class="sub">9.3 AI Service — services/aiService.js</h3>
+      <ul>
+        <li>Single responsibility: given a <code>topic</code>, return <code>{ title, content }</code>.</li>
+        <li>Uses the <code>openai</code> SDK with <code>OPENAI_API_KEY</code>, model <code>gpt-4o-mini</code>.</li>
+        <li>Call <code>chat.completions.create</code> with <code>response_format: { type: "json_object" }</code> (JSON mode) → parseable JSON directly.</li>
+      </ul>
+<pre><code>You are a knowledgeable community member starting a discussion on an online forum.
+Write an engaging forum post about the topic: "&lt;TOPIC&gt;".
+Requirements:
+- A concise, catchy title (max 120 chars), no quotes.
+- A body of 80–250 words that raises a question or opinion to spark replies.
+- Natural, conversational, discussion-starter tone. Not an encyclopedia entry.
+Return ONLY valid JSON, no markdown fences:
+{ "title": "...", "content": "..." }</code></pre>
+      <ul>
+        <li>Still <code>JSON.parse</code> inside try/catch and strip stray code fences defensively.</li>
+        <li><strong>Post-parse validation:</strong> ensure title + content non-empty and within bounds (§12.2–12.3). On failure → throw typed <code>AIError</code> → controller returns <code>502</code>. <strong>Never persist a partial post.</strong></li>
+        <li>Apply a request <strong>timeout</strong> (~15s) so a hung provider surfaces as a controlled <code>502</code>.</li>
+      </ul>
+      <h4 class="sub2">Environment variables</h4>
+      <div class="twrap"><table>
+        <thead><tr><th>Var</th><th>Example</th><th>Used by</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">PORT</td><td class="mono">5000</td><td>server</td></tr>
+          <tr><td class="mono">MONGODB_URI</td><td class="mono">mongodb://localhost:27017/ai-forum</td><td>db</td></tr>
+          <tr><td class="mono">OPENAI_API_KEY</td><td class="mono">sk-… (never commit)</td><td>AI service</td></tr>
+          <tr><td class="mono">OPENAI_MODEL</td><td class="mono">gpt-4o-mini</td><td>AI service</td></tr>
+          <tr><td class="mono">CORS_ORIGIN</td><td class="mono">http://localhost:5173</td><td>CORS</td></tr>
+          <tr><td class="mono">AI_TIMEOUT_MS</td><td class="mono">15000</td><td>AI service</td></tr>
+          <tr><td class="mono">VITE_API_BASE_URL</td><td class="mono">http://localhost:5000/api</td><td>frontend axios</td></tr>
+        </tbody>
+      </table></div>
+      <div class="callout warn"><strong>Secret hygiene:</strong> <code>OPENAI_API_KEY</code> lives only in <code>backend/.env</code> (git-ignored). Never sent to or bundled into the frontend; all OpenAI calls happen server-side.</div>
+      <h4 class="sub2">Middleware</h4>
+      <ul>
+        <li><code>validate.js</code> — express-validator chains + formatter → <code>400</code> with field errors.</li>
+        <li><code>errorHandler.js</code> — maps error types → status codes, logs server-side, returns envelope (no stack traces to client).</li>
+        <li><code>notFound.js</code> — 404 for unknown routes.</li>
+        <li><code>rateLimiter.js</code> <em>(optional)</em> — express-rate-limit on generate (e.g. 10 req / 15 min / IP).</li>
+      </ul>
+      <h4 class="sub2">Seed</h4>
+      <p><code>seedUser.js</code> idempotently upserts the Default User (boot or <code>npm run seed</code>). Optionally seed 2–3 sample posts so the feed isn't empty on first load.</p>
+    </section>
+
+    <!-- 10 -->
+    <section id="s10">
+      <h2 class="sec"><span class="num">10</span><span class="t">Folder Structure</span></h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px">
+        <div><h4 class="sub2">Frontend</h4>
+<pre><code>frontend/
+  index.html
+  tailwind.config.js
+  vite.config.js
+  .env                  # VITE_API_BASE_URL
+  src/
+    assets/             # Geist fonts, icons
+    components/
+      common/           # Button, Card, Input, Loader,
+                        #   Avatar, Toast, EmptyState
+      forum/            # TopicForm, PostCard, LikeButton,
+                        #   ShareButton, CopyLinkButton,
+                        #   CommentSection, CommentForm,
+                        #   CommentItem, PostDetailHeader,
+                        #   PostMeta
+      layout/           # Navbar, Sidebar, PageContainer
+    pages/              # HomePage, PostDetailPage, NotFound
+    hooks/              # usePosts, usePost, useGeneratePost,
+                        #   useLike, useComments
+    services/           # apiClient, postService, commentService
+    utils/              # formatDate, clipboard, truncate
+    context/            # ToastContext, UserContext
+    styles/             # index.css (Tailwind + Geist)
+    App.jsx  main.jsx</code></pre></div>
+        <div><h4 class="sub2">Backend</h4>
+<pre><code>backend/
+  .env                  # PORT, MONGODB_URI,
+                        #   OPENAI_API_KEY, ...
+  package.json
+  src/
+    config/             # db.js, env.js
+    controllers/        # postController, commentController
+    models/             # User, Post, Comment
+    routes/             # index, postRoutes, commentRoutes
+    services/           # aiService, postService
+    middleware/         # validate, errorHandler,
+                        #   notFound, rateLimiter
+    utils/              # ApiError, asyncHandler, response
+    seed/               # seedUser, seedPosts
+    app.js              # express app + wiring
+    server.js           # boot: DB, seed, listen</code></pre></div>
+      </div>
+    </section>
+
+    <!-- 11 -->
+    <section id="s11">
+      <h2 class="sec"><span class="num">11</span><span class="t">UI Components</span></h2>
+      <div class="twrap"><table>
+        <thead><tr><th>Component</th><th>Where</th><th>Responsibility</th></tr></thead>
+        <tbody>
+          <tr><td>Navbar</td><td>layout</td><td>Branding, (decorative) search, avatar</td></tr>
+          <tr><td>Sidebar</td><td>layout</td><td>Static Trending + Forum Rules (optional, hidden on mobile)</td></tr>
+          <tr><td>PageContainer</td><td>layout</td><td>Max-width 1200px, responsive gutters</td></tr>
+          <tr><td>TopicForm</td><td>forum</td><td>Topic input + Generate; inline errors; disables while generating</td></tr>
+          <tr><td>PostCard</td><td>forum</td><td>Feed summary; links to detail</td></tr>
+          <tr><td>PostDetailHeader</td><td>forum</td><td>Full title, author, date, action row</td></tr>
+          <tr><td>PostMeta</td><td>forum</td><td>Like count, comment count, share</td></tr>
+          <tr><td>LikeButton</td><td>forum</td><td>Upvote control; optimistic; session guard</td></tr>
+          <tr><td>ShareButton</td><td>forum</td><td>Native share or clipboard; triggers toast</td></tr>
+          <tr><td>CopyLinkButton</td><td>forum</td><td>Copies <code>/posts/:id</code> URL</td></tr>
+          <tr><td>CommentSection</td><td>forum</td><td>Lists comments (thread line, AUTHOR badge)</td></tr>
+          <tr><td>CommentItem</td><td>forum</td><td>Avatar, author, text, date</td></tr>
+          <tr><td>CommentForm</td><td>forum</td><td>Text input + submit; validates; appends</td></tr>
+          <tr><td>Button</td><td>common</td><td>Primary/secondary, sizes, disabled/loading</td></tr>
+          <tr><td>Card</td><td>common</td><td>White surface, 1px border, hover elevation</td></tr>
+          <tr><td>Input</td><td>common</td><td>Labeled input, focus glow, error state</td></tr>
+          <tr><td>Avatar</td><td>common</td><td>Image or initials fallback</td></tr>
+          <tr><td>Loader</td><td>common</td><td>Spinner + skeleton</td></tr>
+          <tr><td>EmptyState</td><td>common</td><td>No-posts / no-comments messaging</td></tr>
+          <tr><td>ToastNotification</td><td>common</td><td>Transient success/error feedback</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- 12 -->
+    <section id="s12">
+      <h2 class="sec"><span class="num">12</span><span class="t">Validation Rules</span></h2>
+      <p>Server-side validation is authoritative; client mirrors it for UX only.</p>
+      <div class="twrap"><table>
+        <thead><tr><th>Field</th><th>Rules</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Topic</strong> (→ generate)</td><td>Required; not empty/whitespace; min 3, max 100 chars.</td></tr>
+          <tr><td><strong>Generated title</strong> (post-AI)</td><td>Required, non-empty; max 120 chars (prefer reject → 502).</td></tr>
+          <tr><td><strong>Generated content</strong> (post-AI)</td><td>Required, non-empty; min 50, max 2000 chars.</td></tr>
+          <tr><td><strong>Comment text</strong> (→ comments)</td><td>Required; not empty/whitespace; min 1, max 500 chars.</td></tr>
+          <tr><td><strong>Author</strong></td><td>Always the seeded Default User (server-attached). No client author trusted.</td></tr>
+          <tr><td><strong>IDs / share URL</strong></td><td><code>:id</code> validated as ObjectId → 400 if malformed, 404 if absent. Share URL derived only from a valid <code>_id</code>.</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- 13 -->
+    <section id="s13">
+      <h2 class="sec"><span class="num">13</span><span class="t">Error Handling</span></h2>
+      <p>Centralized <code>errorHandler</code>; typed <code>ApiError</code> with <code>statusCode</code>. No stack traces leaked. Standard <code>{ success:false, message, errors? }</code> envelope.</p>
+      <div class="twrap"><table>
+        <thead><tr><th>Scenario</th><th>Backend</th><th>Frontend</th></tr></thead>
+        <tbody>
+          <tr><td><strong>AI failure</strong> (down, bad key, rate limit, timeout)</td><td>502/500, friendly message, <strong>do not save</strong>, log</td><td>"Unable to generate post right now. Please try again." + retry; keep topic input</td></tr>
+          <tr><td><strong>Empty/malformed AI response</strong></td><td>Reject, controlled 502, no persist</td><td>Same generate error + retry</td></tr>
+          <tr><td><strong>DB failure</strong></td><td>500, log, generic message</td><td>Generic error toast, retry</td></tr>
+          <tr><td><strong>Network failure</strong></td><td>—</td><td>Clear network message, preserve input, retry</td></tr>
+          <tr><td><strong>Invalid request</strong></td><td>400 with field <code>errors[]</code></td><td>Inline field errors; keep form state</td></tr>
+          <tr><td><strong>Not found</strong></td><td>404</td><td>Not-found state on detail; toast on actions</td></tr>
+          <tr><td><strong>Rate limited</strong> (if enabled)</td><td>429</td><td>"You're generating too fast — try again shortly."</td></tr>
+        </tbody>
+      </table></div>
+      <div class="callout">Principles: fail closed on writes (never persist invalid data); user copy is friendly and actionable; internal details are logged, not exposed.</div>
+    </section>
+
+    <!-- 14 -->
+    <section id="s14">
+      <h2 class="sec"><span class="num">14</span><span class="t">Development Milestones</span></h2>
+      <p>Ordered for a 4–8h build; each milestone is independently demoable. <strong>Tick tasks as you complete them — progress saves in your browser.</strong></p>
+
+      <div class="card milestone" data-group>
+        <div class="grouphead"><span class="gh-title">M0 — Scaffolding</span><span class="gh-sub">30–45 min</span><span class="group-meter"><span class="group-meter-fill"></span></span><span class="group-count">0/5</span></div>
+        <ul class="checklist">
+          <li><label class="check"><input type="checkbox" data-track data-key="m0-1"><span class="ck-text">Init <b>frontend</b> (Vite + React + Tailwind + Router) and <b>backend</b> (Express + Mongoose)</span></label></li>
+          <li><label class="check"><input type="checkbox" data-track data-key="m0-2"><span class="ck-text">Tailwind config with design tokens (§8.2); Geist font loaded</span></label></li>
+          <li><label class="check"><input type="checkbox" data-track data-key="m0-3"><span class="ck-text"><code>.env</code> files; DB connection; <code>/api/health</code>; CORS</span></label></li>
+          <li><label class="check"><input type="checkbox" data-track data-key="m0-4"><span class="ck-text">Seed Default User</span></label></li>
+          <li><label class="check"><input type="checkbox" data-track data-key="m0-5"><span class="ck-text">Repo runs: <code>npm run dev</code> on both, health check green</span></label></li>
+        </ul>
+      </div>
+
+      <div class="card milestone" data-group>
+        <div class="grouphead"><span class="gh-title">M1 — Data layer &amp; core APIs</span><span class="gh-sub">60–90 min</span><span class="group-meter"><span class="group-meter-fill"></span></span><span class="group-count">0/4</span></div>
+        <ul class="checklist">
+          <li><label class="check"><input type="checkbox" data-track data-key="m1-1"><span class="ck-text">Models: User, Post, Comment</span></label></li>
+          <li><label class="check"><input type="checkbox" data-track data-key="m1-2"><span class="ck-text"><code>GET /api/posts</code> and <code>GET /api/posts/:id</code></span></label></li>
+          <li><label class="check"><input type="checkbox" data-track data-key="m1-3"><span class="ck-text">Error handler, validation middleware, response envelope</span></label></li>
+          <li><label class="check"><input type="checkbox" data-track data-key="m1-4"><span class="ck-text">Seed 2–3 sample posts</span></label></li>
+        </ul>
+      </div>
+
+      <div class="card milestone" data-group>
+        <div class="grouphead"><span class="gh-title">M2 — AI generation</span><span class="gh-sub">60–90 min</span><span class="group-meter"><span class="group-meter-fill"></span></span><span class="group-count">0/3</span></div>
+        <ul class="checklist">
+          <li><label class="check"><input type="checkbox" data-track data-key="m2-1"><span class="ck-text"><code>aiService.js</code> (OpenAI, prompt, JSON mode, timeout, post-validation)</span></label></li>
+          <li><label class="check"><input type="checkbox" data-track data-key="m2-2"><span class="ck-text"><code>POST /api/posts/generate</code> end-to-end (validate → AI → save → return)</span></label></li>
+          <li><label class="check"><input type="checkbox" data-track data-key="m2-3"><span class="ck-text">Manual test with sample topics</span></label></li>
+        </ul>
+      </div>
+
+      <div class="card milestone" data-group>
+        <div class="grouphead"><span class="gh-title">M3 — Frontend feed + generation</span><span class="gh-sub">60–90 min</span><span class="group-meter"><span class="group-meter-fill"></span></span><span class="group-count">0/3</span></div>
+        <ul class="checklist">
+          <li><label class="check"><input type="checkbox" data-track data-key="m3-1"><span class="ck-text">Layout: Navbar, PageContainer, Sidebar</span></label></li>
+          <li><label class="check"><input type="checkbox" data-track data-key="m3-2"><span class="ck-text">HomePage: TopicForm + feed of PostCards</span></label></li>
+          <li><label class="check"><input type="checkbox" data-track data-key="m3-3"><span class="ck-text"><code>usePosts</code>, <code>useGeneratePost</code>; loading skeleton; empty state; prepend on success</span></label></li>
+        </ul>
+      </div>
+
+      <div class="card milestone" data-group>
+        <div class="grouphead"><span class="gh-title">M4 — Interactions</span><span class="gh-sub">60–90 min</span><span class="group-meter"><span class="group-meter-fill"></span></span><span class="group-count">0/3</span></div>
+        <ul class="checklist">
+          <li><label class="check"><input type="checkbox" data-track data-key="m4-1"><span class="ck-text">Like: <code>PATCH /like</code> + LikeButton optimistic + session guard</span></label></li>
+          <li><label class="check"><input type="checkbox" data-track data-key="m4-2"><span class="ck-text">Comments: <code>GET/POST /comments</code>, CommentSection, CommentForm</span></label></li>
+          <li><label class="check"><input type="checkbox" data-track data-key="m4-3"><span class="ck-text">Share: ShareButton (native/clipboard) + ToastNotification</span></label></li>
+        </ul>
+      </div>
+
+      <div class="card milestone" data-group>
+        <div class="grouphead"><span class="gh-title">M5 — Post detail + polish</span><span class="gh-sub">45–60 min</span><span class="group-meter"><span class="group-meter-fill"></span></span><span class="group-count">0/3</span></div>
+        <ul class="checklist">
+          <li><label class="check"><input type="checkbox" data-track data-key="m5-1"><span class="ck-text"><code>/posts/:id</code> PostDetailPage (full content, comments, actions)</span></label></li>
+          <li><label class="check"><input type="checkbox" data-track data-key="m5-2"><span class="ck-text">Responsive pass (mobile stack), focus/hover states, not-found + error states</span></label></li>
+          <li><label class="check"><input type="checkbox" data-track data-key="m5-3"><span class="ck-text">Final QA against acceptance criteria</span></label></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 15 -->
+    <section id="s15">
+      <h2 class="sec"><span class="num">15</span><span class="t">Acceptance Criteria</span></h2>
+      <p><strong>Tick each as verified.</strong> The build is done when every box is checked.</p>
+
+      <div class="ac-group" data-group>
+        <div class="grouphead"><span class="gh-title">Generation</span><span class="group-meter"><span class="group-meter-fill"></span></span><span class="group-count">0/4</span></div>
+        <ul class="checklist">
+          <li><label class="check"><input type="checkbox" data-track data-key="ac-g1"><span class="ck-text">Valid topic + Generate creates a post and shows it at the top of the feed</span></label></li>
+          <li><label class="check"><input type="checkbox" data-track data-key="ac-g2"><span class="ck-text">Loading state during generation; button disabled in-flight</span></label></li>
+          <li><label class="check"><input type="checkbox" data-track data-key="ac-g3"><span class="ck-text">Empty/short/long topics rejected with a visible field error, no side effects</span></label></li>
+          <li><label class="check"><input type="checkbox" data-track data-key="ac-g4"><span class="ck-text">AI failure shows friendly error + retry; no partial post saved</span></label></li>
+        </ul>
+      </div>
+
+      <div class="ac-group" data-group>
+        <div class="grouphead"><span class="gh-title">Feed</span><span class="group-meter"><span class="group-meter-fill"></span></span><span class="group-count">0/2</span></div>
+        <ul class="checklist">
+          <li><label class="check"><input type="checkbox" data-track data-key="ac-f1"><span class="ck-text">Feed lists posts newest-first with title, preview, author, date, like count, comment count, share</span></label></li>
+          <li><label class="check"><input type="checkbox" data-track data-key="ac-f2"><span class="ck-text">Empty feed shows an empty state</span></label></li>
+        </ul>
+      </div>
+
+      <div class="ac-group" data-group>
+        <div class="grouphead"><span class="gh-title">Likes</span><span class="group-meter"><span class="group-meter-fill"></span></span><span class="group-count">0/2</span></div>
+        <ul class="checklist">
+          <li><label class="check"><input type="checkbox" data-track data-key="ac-l1"><span class="ck-text">Clicking like increments the count and persists (survives refresh)</span></label></li>
+          <li><label class="check"><input type="checkbox" data-track data-key="ac-l2"><span class="ck-text"><em>(Optional)</em> Second like in the same session is prevented client-side</span></label></li>
+        </ul>
+      </div>
+
+      <div class="ac-group" data-group>
+        <div class="grouphead"><span class="gh-title">Comments</span><span class="group-meter"><span class="group-meter-fill"></span></span><span class="group-count">0/3</span></div>
+        <ul class="checklist">
+          <li><label class="check"><input type="checkbox" data-track data-key="ac-c1"><span class="ck-text">Valid comment appends and increments the count</span></label></li>
+          <li><label class="check"><input type="checkbox" data-track data-key="ac-c2"><span class="ck-text">Empty/too-long comments rejected with an inline error</span></label></li>
+          <li><label class="check"><input type="checkbox" data-track data-key="ac-c3"><span class="ck-text">Comments render author, text, date; empty state when none</span></label></li>
+        </ul>
+      </div>
+
+      <div class="ac-group" data-group>
+        <div class="grouphead"><span class="gh-title">Sharing &amp; Detail</span><span class="group-meter"><span class="group-meter-fill"></span></span><span class="group-count">0/4</span></div>
+        <ul class="checklist">
+          <li><label class="check"><input type="checkbox" data-track data-key="ac-s1"><span class="ck-text">Share copies <code>/posts/:id</code> (or native share) and toasts "Link copied to clipboard."</span></label></li>
+          <li><label class="check"><input type="checkbox" data-track data-key="ac-s2"><span class="ck-text">Opening a shared URL loads that exact post via the detail page</span></label></li>
+          <li><label class="check"><input type="checkbox" data-track data-key="ac-s3"><span class="ck-text"><code>/posts/:id</code> shows full post + all comments + working like/comment/share</span></label></li>
+          <li><label class="check"><input type="checkbox" data-track data-key="ac-s4"><span class="ck-text">Invalid/missing IDs show a not-found state, not a crash</span></label></li>
+        </ul>
+      </div>
+
+      <div class="ac-group" data-group>
+        <div class="grouphead"><span class="gh-title">Cross-cutting</span><span class="group-meter"><span class="group-meter-fill"></span></span><span class="group-count">0/3</span></div>
+        <ul class="checklist">
+          <li><label class="check"><input type="checkbox" data-track data-key="ac-x1"><span class="ck-text">Responsive on mobile/tablet/desktop; feed stacks cleanly on small screens</span></label></li>
+          <li><label class="check"><input type="checkbox" data-track data-key="ac-x2"><span class="ck-text">No secrets in the client bundle; all inputs validated server-side; CORS restricted</span></label></li>
+          <li><label class="check"><input type="checkbox" data-track data-key="ac-x3"><span class="ck-text">Folder structure matches §10; UI matches the design system (§8.2)</span></label></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 16 -->
+    <section id="s16">
+      <h2 class="sec"><span class="num">16</span><span class="t">Future Improvements</span></h2>
+      <p><strong>Outside required scope.</strong> Prioritized:</p>
+      <ol>
+        <li><strong>Search discussions</strong> — wire the navbar search to a filtered feed query.</li>
+        <li><strong>Trending topics / category chips</strong> — make sidebar + categories data-driven.</li>
+        <li><strong>Delete comment</strong> — with confirm.</li>
+        <li><strong>Dark mode</strong> — tokens already define inverse surfaces; add a toggle.</li>
+        <li><strong>Markdown support</strong> — render post/comment bodies as sanitized Markdown.</li>
+        <li><strong>Share-count tracking</strong> — add <code>PATCH /api/posts/:id/share</code> + <code>shareCount</code>.</li>
+        <li><strong>Copy-link toast animation</strong> — subtle enter/exit motion.</li>
+        <li><strong>Post detail enhancements</strong> — related posts, reading time, copy-permalink in header.</li>
+      </ol>
+      <div class="callout warn"><strong>Do not build:</strong> authentication, notifications, pagination/infinite scroll, WebSockets/real-time, moderation/admin, multi-user identity, or any enterprise-scale feature.</div>
+    </section>
+
+    <!-- appendices -->
+    <section id="sa">
+      <h2 class="sec"><span class="num">A·B</span><span class="t">Appendices</span></h2>
+      <h4 class="sub2">A — Reference design assets</h4>
+      <ul>
+        <li><code>stitch_clean_forum_post_generator/DESIGN.md</code> — full token spec.</li>
+        <li><code>stitch_clean_forum_post_generator/screen.png</code> — reference desktop layout.</li>
+        <li><code>stitch_clean_forum_post_generator/code.html</code> — reference static markup.</li>
+      </ul>
+      <h4 class="sub2">B — Terminology map</h4>
+      <div class="twrap"><table>
+        <thead><tr><th>Spec term</th><th>Design rendering</th><th>API</th></tr></thead>
+        <tbody>
+          <tr><td>Like</td><td>Upvote arrow + count</td><td><code>likeCount</code>, <code>PATCH /like</code></td></tr>
+          <tr><td>Share</td><td>Share icon → clipboard/native</td><td>client-only (no endpoint)</td></tr>
+          <tr><td>Topic form</td><td>"Start a Discussion" card</td><td><code>POST /generate</code></td></tr>
+          <tr><td>Author</td><td>"Default User" (seeded)</td><td><code>author</code> ref → User</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+  </main>
+</div>
+
+<footer>
+  AI Forum PRD · v1.1 · OpenAI <code>gpt-4o-mini</code> · Progress is saved locally in your browser (not shared). Reset clears it.
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement;
+  var TKEY="aiforum-prd-theme", CKEY="aiforum-prd-checks-v1";
+
+  // Theme
+  try{var t=localStorage.getItem(TKEY); if(t) root.setAttribute("data-theme",t);}catch(e){}
+  document.getElementById("themeBtn").addEventListener("click",function(){
+    var cur=root.getAttribute("data-theme");
+    if(!cur){cur=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";}
+    var next=cur==="dark"?"light":"dark";
+    root.setAttribute("data-theme",next);
+    try{localStorage.setItem(TKEY,next);}catch(e){}
+  });
+
+  // Checklist persistence + progress
+  var boxes=Array.prototype.slice.call(document.querySelectorAll('input[data-track]'));
+  var fill=document.getElementById("pfill"), pcount=document.getElementById("pcount"), ppct=document.getElementById("ppct");
+  function state(){try{return JSON.parse(localStorage.getItem(CKEY)||"{}");}catch(e){return {};}}
+  function save(){var s={};boxes.forEach(function(b){if(b.checked)s[b.dataset.key]=1;});try{localStorage.setItem(CKEY,JSON.stringify(s));}catch(e){}}
+  function load(){var s=state();boxes.forEach(function(b){b.checked=!!s[b.dataset.key];});}
+  function update(){
+    var total=boxes.length, done=boxes.filter(function(b){return b.checked;}).length;
+    var pct=total?Math.round(done/total*100):0;
+    fill.style.width=pct+"%"; pcount.textContent=done+" / "+total; ppct.textContent=pct+"%";
+    document.querySelectorAll('[data-group]').forEach(function(g){
+      var gb=Array.prototype.slice.call(g.querySelectorAll('input[data-track]'));
+      var gd=gb.filter(function(b){return b.checked;}).length;
+      var m=g.querySelector('.group-meter-fill'); if(m) m.style.width=(gb.length?gd/gb.length*100:0)+"%";
+      var c=g.querySelector('.group-count'); if(c) c.textContent=gd+"/"+gb.length;
+      g.classList.toggle('group-complete', gb.length>0 && gd===gb.length);
+    });
+  }
+  boxes.forEach(function(b){b.addEventListener("change",function(){save();update();});});
+  load(); update();
+
+  document.getElementById("resetBtn").addEventListener("click",function(){
+    if(!confirm("Clear all checked progress?")) return;
+    boxes.forEach(function(b){b.checked=false;});
+    try{localStorage.removeItem(CKEY);}catch(e){}
+    update();
+  });
+
+  // TOC active highlight
+  var links=Array.prototype.slice.call(document.querySelectorAll('nav.toc a'));
+  var map={}; links.forEach(function(a){map[a.getAttribute("href").slice(1)]=a;});
+  if("IntersectionObserver" in window){
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting){
+          links.forEach(function(a){a.classList.remove("active");});
+          var a=map[en.target.id]; if(a) a.classList.add("active");
+        }
+      });
+    },{rootMargin:"-20% 0px -70% 0px",threshold:0});
+    document.querySelectorAll('main section[id]').forEach(function(s){obs.observe(s);});
+  }
+})();
+</script>
