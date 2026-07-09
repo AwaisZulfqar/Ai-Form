@@ -1,6 +1,6 @@
 import Post from "../models/Post.js";
 import User from "../models/User.js";
-import { seedDefaultUser } from "./seedUser.js";
+import { seedUsers } from "./seedUsers.js";
 import { connectDB, disconnectDB } from "../config/db.js";
 
 const SAMPLE_POSTS = [
@@ -45,7 +45,7 @@ export const seedSamplePosts = async () => {
 if (import.meta.url === `file://${process.argv[1]}`) {
   try {
     await connectDB();
-    await seedDefaultUser();
+    await seedUsers();
     await seedSamplePosts();
     await disconnectDB();
     process.exit(0);

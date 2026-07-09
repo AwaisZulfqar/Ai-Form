@@ -7,8 +7,9 @@
   "scripts": {
     "dev": "node --watch src/server.js",
     "start": "node src/server.js",
-    "seed": "node src/seed/seedUser.js",
+    "seed": "node src/seed/seedUsers.js",
     "seed:posts": "node src/seed/seedPosts.js",
+    "seed:demo": "node src/seed/seedDemo.js",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

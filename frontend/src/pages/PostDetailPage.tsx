@@ -2,7 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import PageContainer from "../components/layout/PageContainer";
 import Card from "../components/common/Card";
 import Avatar from "../components/common/Avatar";
-import LikeButton from "../components/forum/LikeButton";
+import VoteControl from "../components/forum/VoteControl";
 import ShareButton from "../components/forum/ShareButton";
 import CommentSection from "../components/forum/CommentSection";
 import EmptyState from "../components/common/EmptyState";
@@ -75,8 +75,19 @@ const PostDetailPage = () => {
           <p className="whitespace-pre-wrap text-body-md text-on-surface-variant">{post.content}</p>
 
           <div className="flex items-center gap-6 border-t border-border pt-4">
-            <LikeButton postId={post._id} likeCount={post.likeCount} size={18} />
-            <ShareButton postId={post._id} title={post.title} size={18} withLabel />
+            <VoteControl
+              postId={post._id}
+              likeCount={post.likeCount}
+              dislikeCount={post.dislikeCount ?? 0}
+              size={18}
+            />
+            <ShareButton
+              postId={post._id}
+              title={post.title}
+              shareCount={post.shareCount ?? 0}
+              size={18}
+              withLabel
+            />
           </div>
         </Card>
 

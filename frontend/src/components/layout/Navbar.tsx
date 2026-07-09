@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import Avatar from "../common/Avatar";
-import { useUser } from "../../context/UserContext";
+import { useUserSwitcher } from "../../context/UserContext";
 
 const Navbar = () => {
-  const user = useUser();
+  const { users, currentUser, setCurrentUserId } = useUserSwitcher();
 
   return (
     <header className="sticky top-0 z-40 h-16 border-b border-border bg-surface">
@@ -25,7 +25,29 @@ const Navbar = () => {
           />
         </div>
 
-        <Avatar name={user.name} src={user.avatar} />
+        <div className="flex items-center gap-2">
+          <Avatar name={currentUser.name} src={currentUser.avatar} />
+          {users.length > 0 && (
+            <>
+              <label htmlFor="acting-as" className="sr-only">
+                Acting as
+              </label>
+              <select
+                id="acting-as"
+                value={currentUser.id ?? ""}
+                onChange={(event) => setCurrentUserId(event.target.value)}
+                className="h-9 max-w-[10rem] rounded-lg border border-border bg-surface px-2 text-body-sm text-on-surface"
+                title="Acting as"
+              >
+                {users.map((user) => (
+                  <option key={user.id} value={user.id ?? ""}>
+                    {user.name}
+                  </option>
+                ))}
+              </select>
+            </>
+          )}
+        </div>
       </div>
     </header>
   );

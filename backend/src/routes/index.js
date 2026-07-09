@@ -2,6 +2,8 @@ import { Router } from "express";
 import { getDbState } from "../config/db.js";
 import { sendSuccess } from "../utils/response.js";
 import postRoutes from "./postRoutes.js";
+import userRoutes from "./userRoutes.js";
+import voteRoutes from "./voteRoutes.js";
 
 const router = Router();
 
@@ -15,5 +17,7 @@ router.get("/health", (req, res) => {
 });
 
 router.use("/posts", postRoutes);
+router.use("/users", userRoutes);
+router.use("/votes", voteRoutes);
 
 export default router;

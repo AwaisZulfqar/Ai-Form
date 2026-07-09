@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { getComments, createComment } from "../services/commentService";
+import { useUser } from "../context/UserContext";
 import type { Comment } from "../types";
 
 export const useComments = (postId: string) => {
+  const currentUser = useUser();
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -26,11 +28,11 @@ export const useComments = (postId: string) => {
   // Throws on failure so the form can surface an inline error.
   const addComment = useCallback(
     async (text: string): Promise<Comment> => {
-      const comment = await createComment(postId, text);
+      const comment = await createComment(postId, text, currentUser.id);
       setComments((prev) => [...prev, comment]);
       return comment;
     },
-    [postId]
+    [postId, currentUser.id]
   );
 
   return { comments, loading, error, refetch, addComment };

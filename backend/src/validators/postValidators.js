@@ -13,3 +13,8 @@ export const topicChain = body("topic")
   .withMessage("Topic must be at least 3 characters")
   .isLength({ max: 100 })
   .withMessage("Topic must be at most 100 characters");
+
+export const voteChain = body("value")
+  .toInt()
+  .isIn([1, -1])
+  .withMessage("Vote value must be 1 (up) or -1 (down)");

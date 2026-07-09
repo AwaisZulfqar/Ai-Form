@@ -11,10 +11,18 @@ export interface Post {
   author: Author;
   topic?: string;
   likeCount: number;
+  dislikeCount?: number;
   commentCount: number;
   shareCount?: number;
   createdAt: string;
   updatedAt?: string;
+}
+
+export type VoteValue = 1 | -1;
+
+export interface UserVote {
+  postId: string;
+  value: VoteValue;
 }
 
 export interface Comment {
