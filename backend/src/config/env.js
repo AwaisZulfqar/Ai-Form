@@ -1,7 +1,7 @@
 import "dotenv/config";
 
 const nodeEnv = process.env.NODE_ENV || "development";
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5001;
 const mongoUri = process.env.MONGODB_URI;
 const openaiApiKey = process.env.OPENAI_API_KEY;
 const openaiModel = process.env.OPENAI_MODEL || "gpt-4o-mini";
